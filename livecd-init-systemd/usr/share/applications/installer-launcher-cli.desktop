@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Install Manjaro Linux (cli)
+Name[pl]=Zainstaluj Manjaro Linux (cli)
 GenericName=Cli Installer
 Comment=Install the operating system to disk
 Exec=sudo /usr/bin/setup
