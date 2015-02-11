@@ -48,6 +48,10 @@ configure_DE_image(){
       DESKTOP="PekWM"
       DESKTOP_IMG="pekwm-image"
     fi
+    if [ -e "/bootmnt/${install_dir}/${arch}/i3-image.sqfs" ] ; then
+      DESKTOP="i3"
+      DESKTOP_IMG="i3-image"
+    fi
     if [ -e "/bootmnt/${install_dir}/${arch}/custom-image.sqfs" ] ; then
       DESKTOP="CUSTOM"
       DESKTOP_IMG="custom-image"
@@ -173,6 +177,9 @@ set_dm_chroot(){
        fi
        if [ -e "/usr/bin/pekwm" ] ; then
          sed -i -e 's|^.*session=.*|session=/usr/bin/pekwm|' ${DESTDIR}/etc/lxdm/lxdm.conf &>/dev/null
+       fi
+       if [ -e "/usr/bin/i3" ] ; then
+         sed -i -e 's|^.*session=.*|session=/usr/bin/i3|' ${DESTDIR}/etc/lxdm/lxdm.conf &>/dev/null
        fi
        chgrp -R lxdm ${DESTDIR}/var/lib/lxdm  &>/dev/null
        chgrp lxdm ${DESTDIR}/etc/lxdm/lxdm.conf  &>/dev/null
@@ -356,10 +363,10 @@ hd_config(){
 	chroot ${DESTDIR} rc-update add cronie default &>/dev/null
 	chroot ${DESTDIR} rc-update add metalog default &>/dev/null
     fi
-    # for openrc
+    # for openrc (add comment for mounting /tmp as tmpfs in /etc/fstab)
     if [ -e /run/openrc ]; then
-      # Setup /tmp as tmpfs in fstab
-      echo "tmpfs     /tmp    tmpfs    nodev,nosuid    0  0" >> ${DESTDIR}/etc/fstab
+      echo "# Uncomment the line below to setup /tmp as tmpfs" >> ${DESTDIR}/etc/fstab
+      echo "# tmpfs    /tmp    tmpfs    nodev,nosuid    0   0" >> ${DESTDIR}/etc/fstab
     fi
 
     DIALOG --infobox "${_setupdisplaymanager}" 6 40
@@ -784,6 +791,11 @@ dogrub_mkconfig(){
 
     # generate resume string for suspend to disk
     [ -z "${swap_partition}" -o "${swap_partition}" = "NONE" ] || sed -i -e "s,GRUB_CMDLINE_LINUX_DEFAULT=.*,GRUB_CMDLINE_LINUX_DEFAULT=\"`cat $DESTDIR/etc/default/grub | grep GRUB_CMDLINE_LINUX_DEFAULT | cut -d'"' -f2` resume=UUID=`blkid -s UUID -o value -p ${swap_partition}`\",g" $DESTDIR/etc/default/grub
+
+    # grub.cfg workaround for net-install
+    if [ "$DESKTOP_IMG" == "net-image" ]
+       sed -i -e 's|GRUB_SAVEDEFAULT=true|#GRUB_SAVEDEFAULT=true|g' $DESTDIR/etc/default/grub
+    fi
 
     # create grub.cfg
     chroot ${DESTDIR} grub-mkconfig -o "/${GRUB_PREFIX_DIR}/grub.cfg" >> /tmp/grub.log 2>&1

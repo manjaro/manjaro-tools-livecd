@@ -6,7 +6,7 @@ description="Pacman initialization script"
 
 depend() {
 	use net
-	need haveged
+	need haveged gnupg-mount
 }
 
 start() {

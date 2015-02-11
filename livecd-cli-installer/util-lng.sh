@@ -1,16 +1,16 @@
 #!/bin/bash
 
-kernel_cmdline(){
-    for param in $(/bin/cat /proc/cmdline); do
-        case "${param}" in
-            $1=*) echo "${param##*=}"; return 0 ;;
-            $1) return 0 ;;
-            *) continue ;;
-        esac
-    done
-    [ -n "${2}" ] && echo "${2}"
-    return 1
-}
+# kernel_cmdline(){
+#     for param in $(/bin/cat /proc/cmdline); do
+#         case "${param}" in
+#             $1=*) echo "${param##*=}"; return 0 ;;
+#             $1) return 0 ;;
+#             *) continue ;;
+#         esac
+#     done
+#     [ -n "${2}" ] && echo "${2}"
+#     return 1
+# }
 
 get_country(){
   local COUNTRY=$(kernel_cmdline lang)
