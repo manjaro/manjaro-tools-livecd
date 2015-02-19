@@ -4,17 +4,15 @@
 
 load_config "/opt/livecd/manjaro-tools.conf"
 
-[[ -r /opt/livecd/util-livecd.sh ]] && source /opt/livecd/util-livecd.sh
-[[ -r /opt/livecd/util-mnt.sh ]] && source /opt/livecd/util-mnt.sh
-[[ -r /opt/livecd/util-inst.sh ]] && source /opt/livecd/util-inst.sh
-
-### TODO: rework mounting; switch from util-mnt.sh to util-mount.sh?
-
-
+VER=0.9.0
 # Basis settings
-TITLE="Manjaro Linux Installation Framework (testing)"
+TITLE="Manjaro Linux Installation Framework $VER"
 PKG_OVERLAY="/opt/livecd/pkgs"
 #DIALOGRC="./setuprc"
+
+if [ -e "/bootmnt/${install_dir}/${arch}/${custom}-image.sqfs" ] ; then
+	DESKTOP_IMG="${custom}-image"
+fi
 
 ANSWER="/tmp/.setup"
 # use the first VT not dedicated to a running console
@@ -42,7 +40,7 @@ PACKAGES=
 
 # clock
 HARDWARECLOCK="localtime"
-TIMEZONE="America/Montreal"
+TIMEZONE="Europe/London"
 
 # destination of blockdevices in /sys
 block="/sys/block"
@@ -70,6 +68,12 @@ S_PRECONFIG=0   # pre configuration editing
 
 # main menu selection tracker
 NEXTITEM=""
+
+username=''
+
+[[ -r /opt/livecd/util-livecd.sh ]] && source /opt/livecd/util-livecd.sh
+[[ -r /opt/livecd/util-mnt.sh ]] && source /opt/livecd/util-mnt.sh
+[[ -r /opt/livecd/util-inst.sh ]] && source /opt/livecd/util-inst.sh
 
 # activate_dmraid()
 # activate dmraid devices
@@ -4039,7 +4043,7 @@ configure_system(){
         fi
 
  	# Determind which language we are using
-	configure_language
+	configure_language ${DESTDIR}
     fi
 
     S_PRECONFIG=1
