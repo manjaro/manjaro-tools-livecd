@@ -11,7 +11,7 @@ depend() {
 
 start() {
 	ebegin "Running pacman initialization"
-	/usr/bin/pacman-key --init &> /dev/null
-	/usr/bin/pacman-key --populate archlinux manjaro &> /dev/null
+	/usr/bin/pacman-key --init >> /var/log/rc.log
+	/usr/bin/pacman-key --populate archlinux manjaro >> /var/log/rc.log
 	eend $?
 }

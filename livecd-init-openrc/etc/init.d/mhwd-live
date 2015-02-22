@@ -12,6 +12,6 @@ depend() {
 start() {
 	ebegin "Running mhwd-live script"
 	# run the mhwd script
-	/usr/bin/mhwd-live &> /dev/null
+	/usr/bin/mhwd-live >> /var/log/rc.log
 	eend $?
 }
