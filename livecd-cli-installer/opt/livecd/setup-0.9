@@ -2515,12 +2515,6 @@ do_uefi_x86_64(){
 
 }
 
-do_uefi_i386(){
-	export _UEFI_ARCH="i386"
-	export _SPEC_UEFI_ARCH="ia32"
-	do_uefi_common
-}
-
 do_uefi_efibootmgr(){
 	modprobe -q efivarfs
 	chroot_mount
@@ -3281,11 +3275,6 @@ dogrub_uefi_x86_64(){
 	dogrub_uefi_common
 }
 
-dogrub_uefi_i386(){
-	do_uefi_i386
-	dogrub_uefi_common
-}
-
 prepare_harddrive(){
 	S_MKFSAUTO=0
 	S_MKFS=0
@@ -3475,10 +3464,6 @@ install_bootloader_uefi_x86_64(){
 	dogrub_uefi_x86_64
 }
 
-install_bootloader_uefi_i386(){
-	dogrub_uefi_i386
-}
-
 install_bootloader_bios(){
 	DIALOG --menu "Which BIOS bootloader would you like to use?" 11 50 4 \
 		"GRUB_BIOS" "GRUB(2) BIOS" \
@@ -3512,12 +3497,10 @@ install_bootloader(){
 install_bootloader_menu(){
 	DIALOG --menu "What is your boot system type?" 10 40 3 \
 		"BIOS" "BIOS" \
-		"UEFI_x86_64" "x86_64 UEFI" \
-		"UEFI_i386" "i386 UEFI" 2>${ANSWER} || CANCEL=1
+		"UEFI_x86_64" "x86_64 UEFI" 2>${ANSWER} || CANCEL=1
 	case $(cat ${ANSWER}) in
 		"BIOS") install_bootloader_bios ;;
 		"UEFI_x86_64") install_bootloader_uefi_x86_64 ;;
-		"UEFI_i386") install_bootloader_uefi_i386 ;;
 	esac
 
 	if [[ "${CANCEL}" = "1" ]]; then
