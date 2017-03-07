@@ -5,7 +5,8 @@ After=network-online.target
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/pacman-mirrors -m rank --geoip && /usr/bin/pacman -Syy
+ExecStartPre=/usr/bin/pacman-mirrors -m rank --geoip
+ExecStart=/usr/bin/pacman -Syy
 
 [Install]
 WantedBy=multi-user.target
