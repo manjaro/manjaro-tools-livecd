@@ -1,4 +1,5 @@
-manjaro-tools-livecd
-====================
+This repo has been archived. Our code is now hosted at
 
-System services for Manjaro's live session
+https://gitlab.manjaro.org/
+
+See you there!
